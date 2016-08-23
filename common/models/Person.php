@@ -21,7 +21,7 @@ use Yii;
  */
 class Person extends \yii\db\ActiveRecord
 {
-    
+    public $person_img;
     /**
      * @inheritdoc
      */
@@ -41,6 +41,7 @@ class Person extends \yii\db\ActiveRecord
             [['address'], 'string'],
             [['firstname', 'lastname', 'photo'], 'string', 'max' => 100],
             [['tel'], 'string', 'max' => 45],
+            [['person_img'], 'file', 'skipOnEmpty' => true, 'on' => 'update', 'extensions' => 'jpg,png,gif']
             //[['department_id'], 'exist', 'skipOnError' => true, 'targetClass' => Department::className(), 'targetAttribute' => ['department_id' => 'id']],
             //[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -59,6 +60,7 @@ class Person extends \yii\db\ActiveRecord
             'address' => 'ที่อยู่',
             'tel' => 'เบอร์โทร',
             'department_id' => 'ฝ่าย',
+            'person_img' => 'รูปภาพ',
         ];
     }
 

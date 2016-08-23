@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\User; //เพิ่ม
+use yii\web\UploadedFile;
 
 /**
  * PersonController implements the CRUD actions for Person model.
@@ -67,7 +68,17 @@ class PersonController extends Controller
         $model = new Person();
         $user = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $user->load(Yii::$app->request->port())) {
+            $user->password_hash = Yii::$app->security->generatePasswordHash($user->password_hash);
+            $user->auth_key = Yii::$app->security->generateRandomString();
+            if($user->save()){
+                $file = UploadedFile::getInstance($model, 'person_img');
+                if($file->size!=0){
+                    $model->photo = $user->id.'-'.$file->baseName.'.'.$file->extension;
+                    $file->saveAs('uploads/person/'.$user->id.'-'.$file->baseName.'.'.$file->extension);
+                }
+                $model->save();
+            }
             return $this->redirect(['view', 'id' => $model->user_id]);
         } else {
             return $this->render('create', [
